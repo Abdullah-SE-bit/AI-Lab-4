@@ -1,21 +1,20 @@
-# lab_eda_gui.py
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# 1. Page Configuration
-
 st.set_page_config(
     page_title="EDA Dashboard",layout="wide")
 
-st.title("Exploratory Data Analysis Interface")
+st.markdown(
+    "<h1 style='font-size:2rem;'>Exploratory Data Analysis Interface</h1>",
+    unsafe_allow_html=True
+)
 
-
-# 2. Sidebar: Dataset Ingestion
-
-st.sidebar.header("Dataset Ingestion")
+st.sidebar.markdown(
+    "<h2 style='font-size:1.25rem;'>Dataset Ingestion</h2>",
+    unsafe_allow_html=True
+)
 
 uploaded_file = st.sidebar.file_uploader(
     "Upload CSV File",
@@ -23,27 +22,20 @@ uploaded_file = st.sidebar.file_uploader(
 )
 
 if uploaded_file is not None:
-    # Read dataset
     df = pd.read_csv(uploaded_file)
-        
-    # 3. Dataset Overview
-    
-    st.subheader("Dataset Overview")
 
-    #set subheader for dataset overview
-    st.write("**First 5 Rows:**")
-
-    #display the first 5 rows of the dataset
+    st.markdown(
+        "<h2 style='font-size:1.5rem;'>Dataset Overview</h2>",
+        unsafe_allow_html=True
+    )
+    st.markdown("**First 5 Rows:**")
     st.dataframe(df.head())
 
-    #display the shape of the dataset
-    st.write("**Dataset Shape:**")
-    st.write("Rows:", df.shape[0])
-    st.write("Columns:", df.shape[1])
+    st.markdown("**Dataset Shape:**")
+    st.markdown(f"Rows: {df.shape[0]}")
+    st.markdown(f"Columns: {df.shape[1]}")
 
-    st.write("**Column Data Types:**")
-    
-    #display the data types of each column in the dataset
+    st.markdown("**Column Data Types:**")
     st.dataframe(
         pd.DataFrame({
             "Column": df.columns,
@@ -51,10 +43,7 @@ if uploaded_file is not None:
         })
     )
 
-    # Missing value summary
-    st.write("**Missing Values per Column:**")
-
-    #display the count and percentage of missing values for each column in the dataset
+    st.markdown("**Missing Values per Column:**")
     missing_values = pd.DataFrame({
         "Missing Count": df.isnull().sum(),
         "Missing Percentage": (df.isnull().sum() / len(df) * 100).round(2)
@@ -62,11 +51,7 @@ if uploaded_file is not None:
 
     st.dataframe(missing_values)
 
-    
-    # Basic statistics for numerical columns
-    st.write("**Basic Numerical Statistics:**")
-
-    #display the basic statistics
+    st.markdown("**Basic Numerical Statistics:**")
     numerical_columns = df.select_dtypes(
         include="number"
     ).columns
@@ -81,38 +66,31 @@ if uploaded_file is not None:
 
         st.dataframe(statistics)
     else:
-        st.write("No numerical columns found.")
+        st.markdown("No numerical columns found.")
 
-    
-    # 4. Attribute Selection
-    
-    #set header for attribute selection in the sidebar
-    st.sidebar.header("Attribute Selection")
+    st.sidebar.markdown(
+        "<h2 style='font-size:1.25rem;'>Attribute Selection</h2>",
+        unsafe_allow_html=True
+    )
 
-    #create a selectbox in the sidebar to choose an attribute for visualization
     selected_column = st.sidebar.selectbox(
         "Select an Attribute",
         df.columns
     )
 
-    # Detect column type
     if pd.api.types.is_numeric_dtype(df[selected_column]):
         column_type = "Numerical"
     else:
         column_type = "Categorical"
 
-    st.write("**Selected Attribute:**", selected_column)
-    st.write("**Attribute Type:**", column_type)
-
-
-    
-    # 5. Visualization Rendering
-    
-    st.subheader("Visualization")
+    st.markdown(f"**Selected Attribute:** {selected_column}")
+    st.markdown(f"**Attribute Type:** {column_type}")
+    st.markdown(
+        "<h2 style='font-size:1.5rem;'>Visualization</h2>",
+        unsafe_allow_html=True
+    )
 
     if column_type == "Numerical":
-        # Histogram with seaborn
-        
         fig, ax = plt.subplots()
 
         sns.histplot(
@@ -129,8 +107,6 @@ if uploaded_file is not None:
         st.pyplot(fig)
 
     else:
-        # Bar chart for categorical
-
         value_counts = df[selected_column].value_counts()
 
         fig, ax = plt.subplots()
