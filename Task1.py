@@ -8,10 +8,7 @@ import seaborn as sns
 # 1. Page Configuration
 
 st.set_page_config(
-    page_title="EDA Dashboard",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+    page_title="EDA Dashboard",layout="wide")
 
 st.title("Exploratory Data Analysis Interface")
 
@@ -153,4 +150,4 @@ if uploaded_file is not None:
         st.pyplot(fig)    
 
 else:
-    st.info("Please upload a CSV file to start EDA.")
+    st.markdown("<p style='font-size:24px;'>Please upload a CSV File</p>", unsafe_allow_html=True)
